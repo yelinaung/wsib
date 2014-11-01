@@ -26,7 +26,7 @@ func ScrapProj(i int) map[string]interface{} {
 }
 
 func random(min, max int) int {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UTC().UnixNano())
 	return rand.Intn(max-min) + min
 }
 
@@ -37,13 +37,13 @@ func main() {
 		Layout: "layout",
 	}))
 
-	i := random(7, 95)
 	m.Get("/suggest", func(ren render.Render) {
+		i := random(7, 95)
 		ren.HTML(200, "index", ScrapProj(i))
 	})
 
-	m.Get("/", func() string {
-		return "Hello world!"
+	m.Get("/", func(ren render.Render) {
+		ren.HTML(200, "index", nil)
 	})
 
 	m.Run()
