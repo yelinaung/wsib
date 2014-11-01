@@ -1,3 +1,12 @@
+body {
+    font-family: 'Raleway', sans-serif;
+}
+
+#suggest-btn {
+    padding: 10px 20px 10px 20px;
+    font-size: 40px;
+}
+
 #btn-div {
     text-align: center;
     margin-top: 100px;
@@ -5,8 +14,15 @@
 }
 
 #title {
-    font-size: 60px;
-    width: 800px;
+    font-size: 30px;
     margin: 0 auto;
     text-align: center;
+}
+
+#desc {
+    line-height: 30px;
+    margin: 0 auto;
+    margin-top: 20px;
+    font-size:25px;
+    text-align: justify;
 }
