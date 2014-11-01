@@ -5,41 +5,43 @@ import (
 	"github.com/codegangsta/martini"
 	"github.com/martini-contrib/render"
 	"log"
-	"math/rand"
-	"time"
 )
 
-var data = make(map[string]interface{})
+type proj struct {
+	title       string
+	description string
+}
 
-func ScrapProj(i int) map[string]interface{} {
+func ScrapProjTest() proj {
 	doc, err := goquery.NewDocument("https://github.com/karan/Projects/blob/master/README.md")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	doc.Find(".markdown-body p").Eq(i).Each(func(i int, s *goquery.Selection) {
-		data["title"] = s.Find("strong").Text()
-		data["desc"] = s.Text()
+	projs := []proj{}
+	i := random(7, 95)
+
+	doc.Find(".markdown-body p").Each(func(i int, s *goquery.Selection) {
+		p := proj{}
+		//		data["title"] = s.Find("strong").Text()
+		//		data["desc"] = s.Text()
+		p.title = s.Find("strong").Text()
+		p.description = s.Text()
+		projs = append(projs, p)
 	})
 
-	return data
+	return projs[i]
 }
 
-func random(min, max int) int {
-	rand.Seed(time.Now().Unix())
-	return rand.Intn(max-min) + min
-}
-
-func main() {
+func mainStruct() {
 
 	m := martini.Classic()
 	m.Use(render.Renderer(render.Options{
 		Layout: "layout",
 	}))
 
-	i := random(7, 95)
 	m.Get("/suggest", func(ren render.Render) {
-		ren.HTML(200, "index", ScrapProj(i))
+		ren.HTML(200, "index", ScrapProjTest())
 	})
 
 	m.Get("/", func() string {
