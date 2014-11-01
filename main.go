@@ -11,13 +11,11 @@ import (
 
 var data = make(map[string]interface{})
 
-func ScrapProj() map[string]interface{} {
+func ScrapProj(i int) map[string]interface{} {
 	doc, err := goquery.NewDocument("https://github.com/karan/Projects/blob/master/README.md")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	i := random(7, 95)
 
 	doc.Find(".markdown-body p").Eq(i).Each(func(i int, s *goquery.Selection) {
 		data["title"] = s.Find("strong").Text()
@@ -38,8 +36,9 @@ func main() {
 		Layout: "layout",
 	}))
 
+	i := random(7, 95)
 	m.Get("/suggest", func(ren render.Render) {
-		ren.HTML(200, "index", ScrapProj())
+		ren.HTML(200, "index", ScrapProj(i))
 	})
 
 	m.Run()
