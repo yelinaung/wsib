@@ -9,8 +9,8 @@ body {
 
 #btn-div {
     text-align: center;
-    margin-top: 100px;
-    margin-bottom: 120px;
+    margin-top: 60px;
+    margin-bottom: 80px;
 }
 
 #title {
@@ -22,8 +22,32 @@ body {
 #desc {
     line-height: 30px;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size:25px;
     text-align: justify;
 }
 
+/* This is the class used for the footer */
+.footer {
+    background: #111;
+    color: #fff;
+    position:absolute; bottom:0;
+    width: 100%;
+}
+
+.footer a:link {
+    color: #FFF;
+}
+
+/* visited link */
+.footer a:visited {
+    color: #FFF;
+}
+
+.l-box {
+    padding: 1em;
+}
+
+.is-center {
+    text-align: center;
+}
