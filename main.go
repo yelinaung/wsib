@@ -62,8 +62,16 @@ func ReadProjFromFile() []string {
 	if err != nil {
 		panic(err)
 	}
-	projs := string(b)
-	return s.Split(projs, "\n")
+	return s.Split(string(b), "\n")
+}
+
+func GetRandomProj(projs []string) map[string]interface{} {
+	i := random(0, len(projs))
+	project := projs[i]
+
+	data["title"] = s.Split(project, " - ")[0]
+	data["desc"] = s.Split(project, " - ")[1]
+	return data
 }
 
 func random(min, max int) int {
@@ -79,16 +87,14 @@ func main() {
 	}))
 
 	m.Get("/suggest", func(ren render.Render) {
-		// i := random(7, 95)
-		// ren.HTML(200, "index", ScrapProj(i))
+		ren.HTML(200, "index", GetRandomProj(ReadProjFromFile()))
 	})
 
 	m.Get("/", func(ren render.Render) {
 		ren.HTML(200, "index", nil)
 	})
 
-	// ScrapProj()
-	fmt.Println("total : ", len(ReadProjFromFile()))
+	m.Run()
 }
 
 // Check if file already exists or not
