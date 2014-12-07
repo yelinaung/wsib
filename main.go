@@ -1,36 +1,69 @@
 package main
 
 import (
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/codegangsta/martini"
 	"github.com/martini-contrib/render"
+	"io/ioutil"
 	"log"
 	"math/rand"
 	"os"
-
+	s "strings"
 	"time"
 )
 
 var data = make(map[string]interface{})
 
-func ScrapProj(i int) {
+const filename = "db.txt"
+
+type Proj struct {
+	Title       string
+	Description string
+}
+
+func ScrapProj() {
+	fmt.Println("scraping ..")
 	doc, err := goquery.NewDocument("https://github.com/karan/Projects/blob/master/README.md")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	doc.Find(".markdown-body p").Each(func(i int, s *goquery.Selection) {
-		txt := s.Text() + "\n"
-		f, err := os.OpenFile("db.txt", os.O_APPEND|os.O_WRONLY, 0600)
+	if !isFileExist(filename) {
+		// if the file doesn't exist, create a new one
+		w, err := os.Create(filename)
 		if err != nil {
 			panic(err)
 		}
+		defer w.Close()
 
-		defer f.Close()
-		if _, err = f.WriteString(txt); err != nil {
-			panic(err)
-		}
-	})
+		// write empty one first
+		err = ioutil.WriteFile(filename, []byte(""), 0644)
+
+		doc.Find(".markdown-body p").Slice(7, 95).Each(func(i int, s *goquery.Selection) {
+			txt := s.Text() + "\n"
+			f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0600)
+			if err != nil {
+				panic(err)
+			}
+
+			defer f.Close()
+
+			if _, err = f.WriteString(txt); err != nil {
+				panic(err)
+			}
+		})
+	}
+}
+
+func ReadProjFromFile() []string {
+	fmt.Println("reading from file ..")
+	b, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	projs := string(b)
+	return s.Split(projs, "\n")
 }
 
 func random(min, max int) int {
@@ -54,7 +87,14 @@ func main() {
 		ren.HTML(200, "index", nil)
 	})
 
-	// m.Run()
-	i := random(7, 95)
-	ScrapProj(i)
+	// ScrapProj()
+	fmt.Println("total : ", len(ReadProjFromFile()))
+}
+
+// Check if file already exists or not
+func isFileExist(filename string) bool {
+	if _, err := os.Stat(filename); err == nil {
+		return true
+	}
+	return false
 }
