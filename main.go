@@ -6,23 +6,31 @@ import (
 	"github.com/martini-contrib/render"
 	"log"
 	"math/rand"
+	"os"
+
 	"time"
 )
 
 var data = make(map[string]interface{})
 
-func ScrapProj(i int) map[string]interface{} {
+func ScrapProj(i int) {
 	doc, err := goquery.NewDocument("https://github.com/karan/Projects/blob/master/README.md")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	doc.Find(".markdown-body p").Eq(i).Each(func(i int, s *goquery.Selection) {
-		data["title"] = s.Find("strong").Text()
-		data["desc"] = s.Text()
-	})
+	doc.Find(".markdown-body p").Each(func(i int, s *goquery.Selection) {
+		txt := s.Text() + "\n"
+		f, err := os.OpenFile("db.txt", os.O_APPEND|os.O_WRONLY, 0600)
+		if err != nil {
+			panic(err)
+		}
 
-	return data
+		defer f.Close()
+		if _, err = f.WriteString(txt); err != nil {
+			panic(err)
+		}
+	})
 }
 
 func random(min, max int) int {
@@ -38,13 +46,15 @@ func main() {
 	}))
 
 	m.Get("/suggest", func(ren render.Render) {
-		i := random(7, 95)
-		ren.HTML(200, "index", ScrapProj(i))
+		// i := random(7, 95)
+		// ren.HTML(200, "index", ScrapProj(i))
 	})
 
 	m.Get("/", func(ren render.Render) {
 		ren.HTML(200, "index", nil)
 	})
 
-	m.Run()
+	// m.Run()
+	i := random(7, 95)
+	ScrapProj(i)
 }
