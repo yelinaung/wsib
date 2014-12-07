@@ -81,6 +81,11 @@ func random(min, max int) int {
 
 func main() {
 
+	// If the file doesn't exist, scrap it
+	if !isFileExist(filename) {
+		ScrapProj()
+	}
+
 	m := martini.Classic()
 	m.Use(render.Renderer(render.Options{
 		Layout: "layout",
