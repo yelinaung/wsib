@@ -65,13 +65,14 @@ func ReadProjFromFile() []string {
 	return s.Split(string(b), "\n")
 }
 
-func GetRandomProj(projs []string) map[string]interface{} {
+func GetRandomProj(projs []string) Proj {
 	i := random(0, len(projs))
 	project := projs[i]
 
-	data["title"] = s.Split(project, " - ")[0]
-	data["desc"] = s.Split(project, " - ")[1]
-	return data
+	title := s.Split(project, " - ")[0]
+	desc := s.Split(project, " - ")[1]
+
+	return Proj{title, desc}
 }
 
 func random(min, max int) int {
