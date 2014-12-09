@@ -13,8 +13,6 @@ import (
 	"time"
 )
 
-var data = make(map[string]interface{})
-
 const filename = "db.txt"
 
 type Proj struct {
