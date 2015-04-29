@@ -14,6 +14,7 @@ import (
 )
 
 const filename = "db.txt"
+const baseURL = "https://github.com/karan/Projects/blob/master/README.md"
 
 type Proj struct {
 	Title       string
@@ -22,7 +23,7 @@ type Proj struct {
 
 func ScrapProj() {
 	fmt.Println("scraping ..")
-	doc, err := goquery.NewDocument("https://github.com/karan/Projects/blob/master/README.md")
+	doc, err := goquery.NewDocument(baseURL)
 	if err != nil {
 		log.Fatal(err)
 	}
