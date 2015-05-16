@@ -56,7 +56,6 @@ func ScrapProj() {
 }
 
 func ReadProjFromFile() []string {
-	fmt.Println("reading from file ..")
 	b, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)
