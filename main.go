@@ -65,10 +65,21 @@ func ReadProjFromFile() []string {
 
 func GetRandomProj(projs []string) Proj {
 	i := random(0, len(projs))
+
+	fmt.Println("i is ", i)
 	project := projs[i]
 
+	if i == 88 {
+		return Proj{
+			"Find PI to the Nth Digit",
+			"Enter a number and have the program generate PI up to that many decimal places. Keep a limit to how far the program will go.",
+		}
+	}
+
 	title := s.Split(project, " - ")[0]
+	fmt.Println("title ", title)
 	desc := s.Split(project, " - ")[1]
+	fmt.Println("desc ", desc)
 
 	return Proj{title, desc}
 }
